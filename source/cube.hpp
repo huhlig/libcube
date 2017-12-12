@@ -79,8 +79,8 @@ public:
                 for (uint8_t x = 0; x < WIDTH; x++) {
                     for (uint8_t z = 0; z < DEPTH; z++) {
                         const bool bit = frame.getState(mask, x, y, z);
-                        std::cout << (uint8_t)bit;
-                        digitalWrite(m_dataPin, bit? HIGH: LOW); delay(DELAY);
+                        std::cout << ( bit ? '0' : '1');
+                        digitalWrite(m_dataPin, bit ? HIGH : LOW); delay(DELAY);
                         digitalWrite(m_clockPin, HIGH); delay(DELAY);
                         digitalWrite(m_clockPin, LOW); delay(DELAY);
                     }
@@ -88,8 +88,8 @@ public:
                 std::cout << ' ';
                 for (uint8_t h = 0; h < HEIGHT; h++) {
                     const bool bit = h == y ? HIGH : LOW;
-                    std::cout << (uint8_t)bit;
-                    digitalWrite(m_dataPin, bit); delay(DELAY);
+                    std::cout << (bit ? '0' : '1');
+                    digitalWrite(m_dataPin, bit ? HIGH : LOW); delay(DELAY);
                     digitalWrite(m_clockPin, HIGH); delay(DELAY);
                     digitalWrite(m_clockPin, LOW); delay(DELAY);
                 }
