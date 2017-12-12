@@ -1,0 +1,6 @@
+# CMake
+cmake-build-*
+CMakeFiles
+
+# IntelliJ
+.idea
