@@ -7,8 +7,7 @@ const uint8_t PIN_OE = 19; // Output Enable
 const uint8_t PIN_LATCH = 13; // Latch
 const uint8_t PIN_CLOCK = 22; // Clock
 const uint8_t PIN_MR = 17; // Master Reset
-
-const uint8_t SPEED = 50; // Times to repeat each frame
+const uint32_t SPEED = 500; // Times to repeat each frame
 
 int main(int argc, char **argv) {
     std::cout << "Starting up" << std::endl;
@@ -17,10 +16,10 @@ int main(int argc, char **argv) {
 
     while (true) {
         for (int f = 0; f < pattern->size(); f++) {
-            for (int t = SPEED; t > 0; t--) {
+            for (int t = SPEED; 0 < t; t--) {
                 cube.displayFrame((*pattern)[f]);
             }
-            std::cout << "Frame Displayed " << (uint8_t) SPEED << " Times" << std::endl;
+            std::cout << "Frame Displayed " << SPEED << " Times" << std::endl;
         }
     }
 }
