@@ -1,3 +1,6 @@
+#ifndef LEDCUBE_CUBE_HPP
+#define LEDCUBE_CUBE_HPP
+
 #include <wiringPi.h>
 #include <cassert>
 #include <cstdint>
@@ -72,3 +75,5 @@ private:
     const uint8_t m_clockPin;
     const uint8_t m_latchPin;
 };
+
+#endif//LEDCUBE_CUBE_HPP

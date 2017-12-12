@@ -10,4 +10,4 @@ find_package(Threads REQUIRED)
 
 include_directories(${WIRINGPI_INCLUDE_DIRS})
 
-add_executable(cube source/cube.hpp source/test.cpp)
+add_executable(cube source/cube.hpp source/test.cpp source/patterns.hpp)
