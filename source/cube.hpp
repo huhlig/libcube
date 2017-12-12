@@ -1,10 +1,12 @@
 #ifndef LEDCUBE_CUBE_HPP
 #define LEDCUBE_CUBE_HPP
-
+#include <iostream>
 #include <wiringPi.h>
 #include <cassert>
 #include <cstdint>
 #include <array>
+
+const uint8_t DELAY = 50;
 
 template<uint8_t WIDTH, uint8_t HEIGHT, uint8_t DEPTH>
 class MonochromeCube {
@@ -46,9 +48,9 @@ public:
         pinMode(latchPin, OUTPUT);
         pinMode(masterResetPin, OUTPUT);
         pinMode(outputEnablePin, OUTPUT);
-        digitalWrite(dataPin, LOW);
-        digitalWrite(clockPin, LOW);
-        digitalWrite(latchPin, LOW);
+        digitalWrite(dataPin, LOW); delay(DELAY);
+        digitalWrite(clockPin, LOW); delay(DELAY);
+        digitalWrite(latchPin, LOW); delay(DELAY);
         resetOutput();
         enableOutput();
     }
@@ -56,36 +58,41 @@ public:
     ~MonochromeCube() {}
 
     void enableOutput() {
-        digitalWrite(m_outputEnablePin, LOW);
+        digitalWrite(m_outputEnablePin, LOW); delay(DELAY);
     }
 
     void disableOutput() {
-        digitalWrite(m_outputEnablePin, HIGH);
+        digitalWrite(m_outputEnablePin, HIGH); delay(DELAY);
     }
 
     void resetOutput() {
-        digitalWrite(m_masterResetPin, LOW);
-        digitalWrite(m_masterResetPin, HIGH);
+        digitalWrite(m_masterResetPin, LOW); delay(DELAY);
+        digitalWrite(m_masterResetPin, HIGH); delay(DELAY);
     }
 
     void displayFrame(Frame frame) {
         for (uint8_t seq = 0; seq < 8; seq++) {
             const uint8_t mask = (1 << seq);
             for (uint8_t y = 0; y < HEIGHT; y++) {
-                digitalWrite(m_latchPin, LOW);
+                digitalWrite(m_latchPin, LOW); delay(DELAY);
                 for (uint8_t x = 0; x < WIDTH; x++) {
                     for (uint8_t z = 0; z < DEPTH; z++) {
-                        digitalWrite(m_dataPin, frame.getState(mask, x, y, z));
-                        digitalWrite(m_clockPin, HIGH);
-                        digitalWrite(m_clockPin, LOW);
+                        const bool bit = frame.getState(mask, x, y, z);
+                        std::cout << (uint8_t)bit;
+                        digitalWrite(m_dataPin, bit? HIGH: LOW); delay(DELAY);
+                        digitalWrite(m_clockPin, HIGH); delay(DELAY);
+                        digitalWrite(m_clockPin, LOW); delay(DELAY);
                     }
                 }
+                std::cout << ' ';
                 for (uint8_t h = 0; h < HEIGHT; h++) {
-                    digitalWrite(m_dataPin, h == y ? HIGH : LOW);
-                    digitalWrite(m_clockPin, HIGH);
-                    digitalWrite(m_clockPin, LOW);
+                    const bool bit = h == y ? HIGH : LOW;
+                    std::cout << (uint8_t)bit;
+                    digitalWrite(m_dataPin, bit); delay(DELAY);
+                    digitalWrite(m_clockPin, HIGH); delay(DELAY);
+                    digitalWrite(m_clockPin, LOW); delay(DELAY);
                 }
-                digitalWrite(m_latchPin, HIGH);
+                digitalWrite(m_latchPin, HIGH); delay(DELAY);
             }
         }
     }
