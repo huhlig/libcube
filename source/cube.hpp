@@ -55,7 +55,7 @@ public:
                 digitalWrite(m_latchPin, LOW);
                 for (uint8_t x = 0; x < WIDTH; x++) {
                     for (uint8_t z = 0; z < DEPTH; z++) {
-                        digitalWrite(m_dataPin, frame.getState(x, y, z, mask));
+                        digitalWrite(m_dataPin, frame.getState(mask, x, y, z));
                         digitalWrite(m_clockPin, HIGH);
                         digitalWrite(m_clockPin, LOW);
                     }
