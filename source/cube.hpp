@@ -38,15 +38,33 @@ public:
         Frame(Buffer buffer) : m_buffer(buffer) {}
     };
 
-    MonochromeCube(uint8_t dataPin, uint8_t clockPin, uint8_t latchPin) :
-            m_dataPin(dataPin), m_clockPin(clockPin), m_latchPin(latchPin) {
+    MonochromeCube(uint8_t dataPin, uint8_t clockPin, uint8_t latchPin, uint8_t masterResetPin, uint8_t outputEnablePin) :
+            m_dataPin(dataPin), m_clockPin(clockPin), m_latchPin(latchPin), m_masterResetPin(masterResetPin), m_outputEnablePin(outputEnablePin) {
         wiringPiSetupGpio();
         pinMode(dataPin, OUTPUT);
         pinMode(clockPin, OUTPUT);
         pinMode(latchPin, OUTPUT);
+        digitalWrite(m_dataPin, LOW);
+        digitalWrite(m_clockPin, LOW);
+        digitalWrite(m_clockPin, LOW);
+        resetOutput();
+        enableOutput();
     }
 
     ~MonochromeCube() {}
+
+    void enableOutput() {
+        digitalWrite(m_outputEnablePin, LOW);
+    }
+
+    void disableOutput() {
+        digitalWrite(m_outputEnablePin, LOW);
+    }
+
+    void resetOutput() {
+        digitalWrite(m_masterResetPin, LOW);
+        digitalWrite(m_masterResetPin, HIGH);
+    }
 
     void displayFrame(Frame frame) {
         for (uint8_t seq = 0; seq < 8; seq++) {
@@ -74,6 +92,8 @@ private:
     const uint8_t m_dataPin;
     const uint8_t m_clockPin;
     const uint8_t m_latchPin;
+    const uint8_t m_masterResetPin;
+    const uint8_t m_outputEnablePin;
 };
 
 #endif//LEDCUBE_CUBE_HPP

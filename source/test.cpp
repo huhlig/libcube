@@ -1,3 +1,4 @@
+#include <iostream>
 #include "cube.hpp"
 #include "patterns.hpp"
 
@@ -7,10 +8,11 @@ const uint8_t PIN_LATCH = 13; // Latch
 const uint8_t PIN_CLOCK = 22; // Clock
 const uint8_t PIN_MR = 17; // Master Reset
 
-const uint8_t SPEED = 1; // Times to repeat each frame
+const uint8_t SPEED = 5; // Times to repeat each frame
 
 int main(int argc, char **argv) {
-    MonochromeCube<4, 4, 4> cube(PIN_DATA, PIN_CLOCK, PIN_LATCH);
+    std::cout << "Starting up" << std::endl;
+    MonochromeCube<4, 4, 4> cube(PIN_DATA, PIN_CLOCK, PIN_LATCH, PIN_OE, PIN_MR);
     std::vector<MonochromeCube<4,4,4>::Frame>* pattern = &pattern_1;
 
     while (true) {
@@ -18,6 +20,7 @@ int main(int argc, char **argv) {
             for(int t = SPEED; t>0; t--) {
                 cube.displayFrame((*pattern)[f]);
             }
+            std::cout << "Frame Displayed " << SPEED <<  " Times" <<std::endl;
         }
     }
 }
