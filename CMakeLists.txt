@@ -11,4 +11,4 @@ find_package(Threads REQUIRED)
 include_directories(${WIRINGPI_INCLUDE_DIRS})
 
 add_executable(cube source/cube.hpp source/test.cpp source/patterns.hpp)
-#target_link_libraries(cube ${WIRINGPI_LIBRARIES})
+target_link_libraries(cube ${WIRINGPI_LIBRARIES})
