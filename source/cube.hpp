@@ -74,6 +74,7 @@ public:
         for (uint8_t seq = 0; seq < 8; seq++) {
             const uint8_t mask = (1 << seq);
             for (uint8_t y = 0; y < HEIGHT; y++) {
+                std::cout << '_';
                 digitalWrite(m_latchPin, LOW); delay(DELAY);
                 for (uint8_t x = 0; x < WIDTH; x++) {
                     for (uint8_t z = 0; z < DEPTH; z++) {
@@ -92,6 +93,7 @@ public:
                     digitalWrite(m_clockPin, HIGH); delay(DELAY);
                     digitalWrite(m_clockPin, LOW); delay(DELAY);
                 }
+                std::cout << 'L' << std::endl;
                 digitalWrite(m_latchPin, HIGH); delay(DELAY);
             }
         }
