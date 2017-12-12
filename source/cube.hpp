@@ -44,9 +44,11 @@ public:
         pinMode(dataPin, OUTPUT);
         pinMode(clockPin, OUTPUT);
         pinMode(latchPin, OUTPUT);
-        digitalWrite(m_dataPin, LOW);
-        digitalWrite(m_clockPin, LOW);
-        digitalWrite(m_clockPin, LOW);
+        pinMode(masterResetPin, OUTPUT);
+        pinMode(outputEnablePin, OUTPUT);
+        digitalWrite(dataPin, LOW);
+        digitalWrite(clockPin, LOW);
+        digitalWrite(latchPin, LOW);
         resetOutput();
         enableOutput();
     }
@@ -58,7 +60,7 @@ public:
     }
 
     void disableOutput() {
-        digitalWrite(m_outputEnablePin, LOW);
+        digitalWrite(m_outputEnablePin, HIGH);
     }
 
     void resetOutput() {
