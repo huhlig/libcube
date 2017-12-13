@@ -9,7 +9,7 @@ const uint8_t PIN_OE = 19; // Output Enable
 const uint8_t PIN_LATCH = 13; // Latch
 const uint8_t PIN_CLOCK = 22; // Clock
 const uint8_t PIN_MR = 17; // Master Reset
-const uint32_t SPEED = 10; // Duration of each frame
+const uint32_t SPEED = 15; // Duration of each frame
 const uint8_t L0 = 0xFF, L1 = 0xAA, L2 = 0x88, L3 = 0x80;
 
 int main(int argc, char **argv) {
@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
         bool success = false;
         uint8_t x = trail[0].x, y = trail[0].y, z = trail[0].z;
         while (!success) {
-            switch (rand() % 7) {
+            switch (rand() % 12) {
                 case 0: // +X
                     if (x + 1 < 4) {
                         x = x + 1;
@@ -73,8 +73,15 @@ int main(int argc, char **argv) {
                     }
                     break;
                 case 6: // No Movement
+                case 7:
+                case 8:
+                case 9:
+                case 10:
+                case 11:
                     success = true;
                     break;
+
+
             }
         }
         trail[3] = trail[2];
