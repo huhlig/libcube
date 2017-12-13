@@ -7,7 +7,7 @@
 #include <vector>
 #include <array>
 
-const uint8_t shiftDelay = 15;
+const uint8_t shiftDelay = 10;
 
 template<uint8_t WIDTH, uint8_t HEIGHT, uint8_t DEPTH>
 class MonochromeCube {

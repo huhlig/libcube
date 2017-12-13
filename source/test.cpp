@@ -9,7 +9,7 @@ const uint8_t PIN_OE = 19; // Output Enable
 const uint8_t PIN_LATCH = 13; // Latch
 const uint8_t PIN_CLOCK = 22; // Clock
 const uint8_t PIN_MR = 17; // Master Reset
-const uint32_t SPEED = 5; // Duration of each frame
+const uint32_t SPEED = 10; // Duration of each frame
 const uint8_t L0 = 0xFF, L1 = 0xAA, L2 = 0x88, L3 = 0x80;
 
 int main(int argc, char **argv) {
