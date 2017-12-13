@@ -1,12 +1,11 @@
 #ifndef LEDCUBE_CUBE_HPP
 #define LEDCUBE_CUBE_HPP
-#include <iostream>
 #include <wiringPi.h>
 #include <cassert>
 #include <cstdint>
 #include <array>
 
-const uint8_t DELAY = 50;
+const uint8_t shiftDelay = 15;
 
 template<uint8_t WIDTH, uint8_t HEIGHT, uint8_t DEPTH>
 class MonochromeCube {
@@ -48,53 +47,52 @@ public:
         pinMode(latchPin, OUTPUT);
         pinMode(masterResetPin, OUTPUT);
         pinMode(outputEnablePin, OUTPUT);
-        digitalWrite(dataPin, LOW); delay(DELAY);
-        digitalWrite(clockPin, LOW); delay(DELAY);
-        digitalWrite(latchPin, LOW); delay(DELAY);
-        resetOutput();
-        enableOutput();
+        digitalWrite(dataPin, LOW);
+        digitalWrite(clockPin, LOW);
+        digitalWrite(latchPin, LOW);
+        digitalWrite(masterResetPin, LOW); delay(shiftDelay);
+        digitalWrite(masterResetPin, HIGH);
+        digitalWrite(outputEnablePin, LOW);
     }
 
     ~MonochromeCube() {}
 
     void enableOutput() {
-        digitalWrite(m_outputEnablePin, LOW); delay(DELAY);
+        digitalWrite(m_outputEnablePin, LOW);
     }
 
     void disableOutput() {
-        digitalWrite(m_outputEnablePin, HIGH); delay(DELAY);
+        digitalWrite(m_outputEnablePin, HIGH);
     }
 
     void resetOutput() {
-        digitalWrite(m_masterResetPin, LOW); delay(DELAY);
-        digitalWrite(m_masterResetPin, HIGH); delay(DELAY);
+        digitalWrite(m_masterResetPin, LOW);
+        digitalWrite(m_masterResetPin, HIGH);
     }
 
-    void displayFrame(Frame frame) {
-        for (uint8_t seq = 0; seq < 8; seq++) {
-            const uint8_t mask = (1 << seq);
-            for (uint8_t y = 0; y < HEIGHT; y++) {
-                std::cout << '_';
-                digitalWrite(m_latchPin, LOW); delay(DELAY);
-                for (uint8_t x = 0; x < WIDTH; x++) {
-                    for (uint8_t z = 0; z < DEPTH; z++) {
-                        const bool bit = frame.getState(mask, x, y, z);
-                        std::cout << ( bit ? '1' : '0');
-                        digitalWrite(m_dataPin, bit ? HIGH : LOW); delay(DELAY);
-                        digitalWrite(m_clockPin, HIGH); delay(DELAY);
-                        digitalWrite(m_clockPin, LOW); delay(DELAY);
+    void displayFrame(Frame frame, uint32_t duration) {
+        for (uint32_t t = duration; t > 0; t--) {
+            for (uint8_t seq = 0; seq < 8; seq++) {
+                const uint8_t mask = (1 << seq);
+                for (uint8_t y = 0; y < HEIGHT; y++) {
+                    digitalWrite(m_latchPin, LOW);
+                    for (uint8_t x = 0; x < WIDTH; x++) {
+                        for (uint8_t z = 0; z < DEPTH; z++) {
+                            const bool bit = frame.getState(mask, x, y, z);
+                            digitalWrite(m_dataPin, bit ? HIGH : LOW);
+                            digitalWrite(m_clockPin, HIGH); delayMicroseconds(shiftDelay);
+                            digitalWrite(m_clockPin, LOW);
+                        }
                     }
+                    for (uint8_t h = 0; h < HEIGHT; h++) {
+                        const bool bit = (h == y ? HIGH : LOW);
+                        digitalWrite(m_dataPin, bit ? HIGH : LOW);
+                        digitalWrite(m_clockPin, HIGH); delayMicroseconds(shiftDelay);
+                        digitalWrite(m_clockPin, LOW);
+                        digitalWrite(m_dataPin, LOW);
+                    }
+                    digitalWrite(m_latchPin, HIGH); delayMicroseconds(shiftDelay);
                 }
-                std::cout << ' ';
-                for (uint8_t h = 0; h < HEIGHT; h++) {
-                    const bool bit = (h == y ? HIGH : LOW);
-                    std::cout << (bit ? '1' : '0' );
-                    digitalWrite(m_dataPin, bit ? HIGH : LOW); delay(DELAY);
-                    digitalWrite(m_clockPin, HIGH); delay(DELAY);
-                    digitalWrite(m_clockPin, LOW); delay(DELAY);
-                }
-                std::cout << 'L' << std::endl;
-                digitalWrite(m_latchPin, HIGH); delay(DELAY);
             }
         }
     }
